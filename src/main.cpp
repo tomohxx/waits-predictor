@@ -9,7 +9,7 @@
 
 int main(int argc, char* argv[])
 {
-  using waits_predictor::MAX_TIDS;
+  using waits_predictor::NUM_TIDS;
 
   if (argc != 2) {
     std::cerr << std::format("Usage: {} [input file]\n", argv[0]);
@@ -26,12 +26,12 @@ int main(int argc, char* argv[])
   waits_predictor::initialize(STATES_FILE_PATH);
 
   int m;
-  std::vector<int> wall(MAX_TIDS, 4);
-  std::vector<int> river(MAX_TIDS, 0);
+  std::vector<int> wall(NUM_TIDS, 4);
+  std::vector<int> river(NUM_TIDS, 0);
 
   fin >> m;
 
-  for (unsigned int i = 0u; i < MAX_TIDS; ++i) {
+  for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
     fin.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
     fin >> wall[i] >> river[i];
   }
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
   std::cout << std::format("Total\t{:d}\n", values[0].all);
   std::cout << "Wait\tNormalHand\tSevenPairs\tThirteenOrphans\tProportion\n";
 
-  for (unsigned int i = 0u; i < MAX_TIDS; ++i) {
+  for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
     std::cout << std::format("{:d}\t{:d}\t{:d}\t{:d}\t{:6f}\n",
                              i,
                              values[1].each[i],

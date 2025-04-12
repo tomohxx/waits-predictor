@@ -29,10 +29,10 @@ namespace waits_predictor {
 
   std::valarray<double> Value::props() const
   {
-    decltype(props()) ret(0., MAX_TIDS);
+    decltype(props()) ret(0., NUM_TIDS);
 
     if (this->all > 0u) {
-      for (std::size_t i = 0u; i < MAX_TIDS; ++i) {
+      for (std::size_t i = 0u; i < NUM_TIDS; ++i) {
         ret[i] = static_cast<double>(each[i]) / all;
       }
     }

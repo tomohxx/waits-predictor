@@ -50,21 +50,21 @@ namespace waits_predictor {
                                       const bool check)
   {
     if (check) {
-      if (const auto size = wall.size(); size != MAX_TIDS) {
+      if (const auto size = wall.size(); size != NUM_TIDS) {
         throw std::invalid_argument(std::format("Invalid size of wall: {}", size));
       }
 
-      if (const auto size = river.size(); size != MAX_TIDS) {
+      if (const auto size = river.size(); size != NUM_TIDS) {
         throw std::invalid_argument(std::format("Invalid size of river: {}", size));
       }
 
-      for (unsigned int i = 0u; i < MAX_TIDS; ++i) {
+      for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
         if (wall[i] < 0 || wall[i] > 4) {
           throw std::invalid_argument(std::format("Invalid number of wall's tiles at {}: {}", i, wall[i]));
         }
       }
 
-      for (unsigned int i = 0u; i < MAX_TIDS; ++i) {
+      for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
         if (river[i] < 0 || river[i] > 4) {
           throw std::invalid_argument(std::format("Invalid number of river's tiles at {}: {}", i, river[i]));
         }
