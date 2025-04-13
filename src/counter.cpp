@@ -14,9 +14,9 @@ namespace waits_predictor::counter {
         }
 
         for (int k = 0; k <= j - 1; ++k) {
-          tmp += lhs.b[k] * rhs.c[j - k - 1] +
-                 lhs.c[k] * rhs.b[j - k - 1] +
-                 lhs.b[k] * rhs.b[j - k - 1];
+          tmp += lhs.b1[k] * rhs.c[j - k - 1] +
+                 lhs.c[k] * rhs.b1[j - k - 1] +
+                 lhs.b2[k] * rhs.b2[j - k - 1];
         }
 
         lhs.d[j] = tmp;
@@ -36,10 +36,20 @@ namespace waits_predictor::counter {
         uint64_t tmp = 0u;
 
         for (int k = 0; k <= j; ++k) {
-          tmp += lhs.a[k] * rhs.b[j - k] + lhs.b[k] * rhs.a[j - k];
+          tmp += lhs.a[k] * rhs.b1[j - k] + lhs.b1[k] * rhs.a[j - k];
         }
 
-        lhs.b[j] = tmp;
+        lhs.b1[j] = tmp;
+      }
+
+      for (int j = m - 1; j >= 0; --j) {
+        uint64_t tmp = 0u;
+
+        for (int k = 0; k <= j; ++k) {
+          tmp += lhs.a[k] * rhs.b2[j - k] + lhs.b2[k] * rhs.a[j - k];
+        }
+
+        lhs.b2[j] = tmp;
       }
 
       for (int j = m; j >= 0; --j) {
@@ -62,9 +72,9 @@ namespace waits_predictor::counter {
       }
 
       for (int k = 0; k <= m - 1; ++k) {
-        ret += lhs.b[k] * rhs.c[m - k - 1] +
-               lhs.c[k] * rhs.b[m - k - 1] +
-               lhs.b[k] * rhs.b[m - k - 1];
+        ret += lhs.b1[k] * rhs.c[m - k - 1] +
+               lhs.c[k] * rhs.b1[m - k - 1] +
+               lhs.b2[k] * rhs.b2[m - k - 1];
       }
 
       return ret;
@@ -79,7 +89,7 @@ namespace waits_predictor::counter {
       }
 
       for (int k = 0; k <= m - 1; ++k) {
-        ret += lhs.b[k] * rhs.c[i][m - k - 1] + lhs.b[k] * rhs.b[i][m - k - 1];
+        ret += lhs.b1[k] * rhs.c[i][m - k - 1] + lhs.b2[k] * rhs.b2[i][m - k - 1];
       }
 
       return ret;

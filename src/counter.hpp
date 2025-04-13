@@ -9,19 +9,20 @@ namespace waits_predictor::counter {
   namespace lh {
     struct All {
       std::vector<uint64_t> a;
-      std::vector<uint64_t> b;
+      std::vector<uint64_t> b1;
+      std::vector<uint64_t> b2;
       std::vector<uint64_t> c;
       std::vector<uint64_t> d;
 
-      All() : a(5u), b(5u), c(5u), d(5u) {}
+      All() : a(5u), b1(5u), b2(5u), c(5u), d(5u) {}
     };
 
     struct Each {
-      std::vector<std::vector<uint64_t>> b;
+      std::vector<std::vector<uint64_t>> b2;
       std::vector<std::vector<uint64_t>> c;
       std::vector<std::vector<uint64_t>> d;
 
-      Each() : b(9u, std::vector<uint64_t>(5u)),
+      Each() : b2(9u, std::vector<uint64_t>(5u)),
                c(9u, std::vector<uint64_t>(5u)),
                d(9u, std::vector<uint64_t>(5u)) {}
     };
