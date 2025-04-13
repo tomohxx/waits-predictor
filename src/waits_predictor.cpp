@@ -76,10 +76,10 @@ namespace waits_predictor {
     }
 
     const Hand wall_(wall.begin(), wall.end());
-    const unsigned int river_ = std::accumulate(river.begin(),
-                                                river.end(),
+    const unsigned int river_ = std::accumulate(river.crbegin(),
+                                                river.crend(),
                                                 0u,
-                                                [](int acc, const int& x) { return (acc << 1) | x; });
+                                                [](int acc, const int& x) { return (acc << 1) | !!x; });
 
     const auto ret_lh = calc_lh(wall_, river_, m);
     auto ret_sp = (m == 4 ? calc_sp(wall_, river_) : Value{});
@@ -129,12 +129,11 @@ namespace waits_predictor {
     for (std::size_t i = 0u; i < hand_waits.size(); ++i) {
       for (std::size_t j = 0u; j < hand_waits[i].size(); ++j) {
         const auto tmp = count_combin(wall, hand_waits[i][j].hand);
-
-        all[i] += tmp;
-
         const auto wait = hand_waits[i][j].wait;
 
         if ((wait & (~river)) != wait) continue;
+
+        all[i] += tmp;
 
         for (std::size_t k = 0u; k < wall.size(); ++k) {
           each[k][i] += (wait & (1u << k)) ? tmp : 0u;
