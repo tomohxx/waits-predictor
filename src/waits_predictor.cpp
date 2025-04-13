@@ -193,7 +193,7 @@ namespace waits_predictor {
       const Hand wall_(wall.cbegin() + 9 * i, wall.cbegin() + 9 * i + 9);
       const uint16_t river_ = (river >> (9 * i)) & 0x1FF;
 
-      all[i].a = count_all(states::sp::hands_a[0], wall_);
+      all[i].a = count_all(states::sp::hands_a[IND_SUITS], wall_);
       std::tie(all[i].b, each[i].b) = count_each(states::sp::hands_b[IND_SUITS], wall_, river_);
     }
 
@@ -201,7 +201,7 @@ namespace waits_predictor {
       const Hand wall_(wall.cbegin() + 27, wall.cend());
       const uint16_t river_ = (river >> 27) & 0x7F;
 
-      all[3].a = count_all(states::sp::hands_a[1], wall_);
+      all[3].a = count_all(states::sp::hands_a[IND_HONOR], wall_);
       std::tie(all[3].b, each[3].b) = count_each(states::sp::hands_b[IND_HONOR], wall_, river_);
     }
 
@@ -217,8 +217,8 @@ namespace waits_predictor {
       const Hand wall_(wall.cbegin() + 9 * i, wall.cbegin() + 9 * i + 9);
       const uint16_t river_ = (river >> (9 * i)) & 0x1FF;
 
-      all[i].a = count_all(states::lh_sp::hands_a[0], wall_);
-      all[i].b1 = count_all(states::lh_sp::hands_b[0], wall_);
+      all[i].a = count_all(states::lh_sp::hands_a[IND_SUITS], wall_);
+      all[i].b1 = count_all(states::lh_sp::hands_b[IND_SUITS], wall_);
       std::tie(all[i].c, each[i].c) = count_each(states::lh_sp::hands_c[IND_SUITS], wall_, river_);
       std::tie(all[i].d, each[i].d) = count_each(states::lh_sp::hands_d[IND_SUITS], wall_, river_);
     }
