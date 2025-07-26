@@ -128,7 +128,8 @@ namespace waits_predictor {
         const auto tmp = count_combin(wall, hand_waits[i][j].hand);
         const auto wait = hand_waits[i][j].wait;
 
-        if ((wait & (~river)) != wait) continue;
+        // 振聴の場合はスキップ
+        if (wait & river) continue;
 
         all[i] += tmp;
 
