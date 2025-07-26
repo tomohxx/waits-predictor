@@ -77,11 +77,16 @@ namespace waits_predictor {
                                                 0u,
                                                 [](int acc, const int& x) { return (acc << 1) | !!x; });
 
+    // 一般形の組合せ
     const auto ret_lh = calc_lh(wall_, river_, m);
+    // 七対子の組合せ
     auto ret_sp = (m == 4 ? calc_sp(wall_, river_) : Value{});
+    // 二盃口の組合せ
     const auto ret_lh_sp = (m == 4 ? calc_lh_sp(wall_, river_) : Value{});
+    // 国士無双の組合せ
     const auto ret_to = (m == 4 ? calc_to(wall, river) : Value{});
 
+    // 七対子の組合せから二盃口の組合せを除去する
     ret_sp -= ret_lh_sp;
 
     return {ret_lh + ret_sp + ret_to, ret_lh, ret_sp, ret_to};
@@ -310,8 +315,10 @@ namespace waits_predictor {
     {
       Value ret;
 
+      // 全組合せを計算する
       ret.all = add2(sum(all, suits[3]), all[3]);
 
+      // 数牌を待ちとする組合せを計算する
       for (std::size_t i = 0u; i < 3u; ++i) {
         const auto tmp = sum(all, suits[i]);
 
@@ -320,6 +327,7 @@ namespace waits_predictor {
         }
       }
 
+      // 字牌を待ちとする組合せを計算する
       {
         const auto tmp = sum(all, suits[3]);
 

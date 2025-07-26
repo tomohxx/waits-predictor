@@ -7,17 +7,17 @@
 namespace waits_predictor::counter {
   namespace lh {
     struct All {
-      std::array<uint64_t, 5u> a{};
-      std::array<uint64_t, 5u> b1{};
-      std::array<uint64_t, 5u> b2{};
-      std::array<uint64_t, 5u> c{};
-      std::array<uint64_t, 5u> d{};
+      std::array<uint64_t, 5u> a{};  // A状態の数
+      std::array<uint64_t, 5u> b1{}; // B1状態の数
+      std::array<uint64_t, 5u> b2{}; // B2状態の数
+      std::array<uint64_t, 5u> c{};  // C状態の数
+      std::array<uint64_t, 5u> d{};  // D状態の数
     };
 
     struct Each {
-      std::array<std::array<uint64_t, 5u>, 9u> b2{};
-      std::array<std::array<uint64_t, 5u>, 9u> c{};
-      std::array<std::array<uint64_t, 5u>, 9u> d{};
+      std::array<std::array<uint64_t, 5u>, 9u> b2{}; // B2状態の数
+      std::array<std::array<uint64_t, 5u>, 9u> c{};  // C状態の数
+      std::array<std::array<uint64_t, 5u>, 9u> d{};  // D状態の数
     };
 
     void add1(All& lhs, const All& rhs, int m);
@@ -28,12 +28,12 @@ namespace waits_predictor::counter {
 
   namespace sp {
     struct All {
-      std::array<uint64_t, 7u> a{};
-      std::array<uint64_t, 7u> b{};
+      std::array<uint64_t, 7u> a{}; // A状態の数
+      std::array<uint64_t, 7u> b{}; // B状態の数
     };
 
     struct Each {
-      std::array<std::array<uint64_t, 7u>, 9u> b{};
+      std::array<std::array<uint64_t, 7u>, 9u> b{}; // B状態の数
     };
 
     void add1(All& lhs, const All& rhs);
