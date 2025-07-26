@@ -5,8 +5,6 @@
 #include <format>
 #include <numeric>
 #include <stdexcept>
-#include <tuple>
-#include <type_traits>
 
 namespace {
   // combination
