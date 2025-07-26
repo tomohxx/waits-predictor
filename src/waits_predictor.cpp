@@ -101,6 +101,7 @@ namespace waits_predictor {
   template <class T>
   void count_all(T& all, const std::vector<Hands>& hands, const Hand& wall)
   {
+    assert(all.size() == hands.size());
     assert(hands[0][0].size() == wall.size());
 
     for (std::size_t i = 0u; i < hands.size(); ++i) {
@@ -113,6 +114,8 @@ namespace waits_predictor {
   template <class T>
   void count_all(T& all, const std::vector<HandWaits>& hand_waits, const Hand& wall)
   {
+    assert(all.size() == hand_waits.size());
+
     for (std::size_t i = 0u; i < hand_waits.size(); ++i) {
       for (std::size_t j = 0u; j < hand_waits[i].size(); ++j) {
         all[i] += count_combin(wall, hand_waits[i][j].hand);
@@ -123,6 +126,10 @@ namespace waits_predictor {
   template <class T, class U>
   void count_each(T& all, U& each, const std::vector<HandWaits>& hand_waits, const Hand& wall, const uint16_t river)
   {
+    assert(all.size() == hand_waits.size());
+    assert(each.size() == 9u);
+    assert(each[0].size() == hand_waits.size());
+
     for (std::size_t i = 0u; i < hand_waits.size(); ++i) {
       for (std::size_t j = 0u; j < hand_waits[i].size(); ++j) {
         const auto tmp = count_combin(wall, hand_waits[i][j].hand);
