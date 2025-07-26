@@ -95,10 +95,8 @@ namespace waits_predictor::counter {
       return ret;
     }
 
-    All sum(const std::vector<All>& all, const std::array<int, 3u>& suits, const int m)
+    All sum(const std::array<All, 4u>& all, const std::array<int, 3u>& suits, const int m)
     {
-      assert(suits.size() > 0u);
-
       All ret = all[suits[0]];
 
       for (std::size_t i = 1u; i < suits.size(); ++i) {
@@ -155,10 +153,8 @@ namespace waits_predictor::counter {
       return ret;
     }
 
-    All sum(const std::vector<All>& all, const std::array<int, 3u>& suits)
+    All sum(const std::array<All, 4u>& all, const std::array<int, 3u>& suits)
     {
-      assert(suits.size() > 0u);
-
       All ret = all[suits[0]];
 
       for (std::size_t i = 1u; i < suits.size(); ++i) {

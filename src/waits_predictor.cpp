@@ -21,7 +21,9 @@ namespace {
 
 namespace waits_predictor {
   namespace internal {
+    // 幺九牌
     constexpr std::array<int, 13u> tile_ids = {0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33};
+    // 組合せを計算するスーツインデックスの配列
     constexpr std::array<std::array<int, 3u>, 4u> suits = {{
         {{1, 2, 3}},
         {{0, 2, 3}},
@@ -29,14 +31,8 @@ namespace waits_predictor {
         {{0, 1, 2}},
     }};
 
-    using All = decltype(counter::lh::All::a);
-    using Each = decltype(counter::lh::Each::b2);
-
-    static_assert(std::is_same<All, decltype(counter::sp::All::a)>::value);
-    static_assert(std::is_same<Each, decltype(counter::sp::Each::b)>::value);
-
-    Value calc_lh(const std::vector<counter::lh::All>& all, const std::vector<counter::lh::Each>& each, int m);
-    Value calc_sp(const std::vector<counter::sp::All>& all, const std::vector<counter::sp::Each>& each);
+    Value calc_lh(const std::array<counter::lh::All, 4u>& all, const std::array<counter::lh::Each, 4u>& each, int m);
+    Value calc_sp(const std::array<counter::sp::All, 4u>& all, const std::array<counter::sp::Each, 4u>& each);
   }
 
   Value calc_lh(const Hand& wall, unsigned int river, int m);
@@ -102,41 +98,31 @@ namespace waits_predictor {
     return ret;
   }
 
-  internal::All count_all(const std::vector<Hands>& hands, const Hand& wall)
+  template <class T>
+  void count_all(T& all, const std::vector<Hands>& hands, const Hand& wall)
   {
     assert(hands[0][0].size() == wall.size());
-
-    internal::All all(hands.size());
 
     for (std::size_t i = 0u; i < hands.size(); ++i) {
       for (std::size_t j = 0u; j < hands[i].size(); ++j) {
         all[i] += count_combin(wall, hands[i][j]);
       }
     }
-
-    return all;
   }
 
-  internal::All count_all(const std::vector<HandWaits>& hand_waits, const Hand& wall)
+  template <class T>
+  void count_all(T& all, const std::vector<HandWaits>& hand_waits, const Hand& wall)
   {
-    internal::All all(hand_waits.size());
-
     for (std::size_t i = 0u; i < hand_waits.size(); ++i) {
       for (std::size_t j = 0u; j < hand_waits[i].size(); ++j) {
         all[i] += count_combin(wall, hand_waits[i][j].hand);
       }
     }
-
-    return all;
   }
 
-  std::tuple<internal::All, internal::Each> count_each(const std::vector<HandWaits>& hand_waits,
-                                                       const Hand& wall,
-                                                       const uint16_t river)
+  template <class T, class U>
+  void count_each(T& all, U& each, const std::vector<HandWaits>& hand_waits, const Hand& wall, const uint16_t river)
   {
-    internal::All all(hand_waits.size());
-    internal::Each each(wall.size(), internal::Each::value_type(hand_waits.size()));
-
     for (std::size_t i = 0u; i < hand_waits.size(); ++i) {
       for (std::size_t j = 0u; j < hand_waits[i].size(); ++j) {
         const auto tmp = count_combin(wall, hand_waits[i][j].hand);
@@ -151,34 +137,32 @@ namespace waits_predictor {
         }
       }
     }
-
-    return {all, each};
   }
 
   Value calc_lh(const Hand& wall, const unsigned int river, const int m)
   {
-    std::vector<counter::lh::All> all(4u);
-    std::vector<counter::lh::Each> each(4u);
+    std::array<counter::lh::All, 4u> all{};
+    std::array<counter::lh::Each, 4u> each{};
 
     for (std::size_t i = 0u; i < 3u; ++i) {
       const Hand wall_(wall.cbegin() + 9 * i, wall.cbegin() + 9 * i + 9);
       const uint16_t river_ = (river >> (9 * i)) & 0x1FF;
 
-      all[i].a = count_all(states::lh::hands_a[IND_SUITS], wall_);
-      all[i].b1 = count_all(states::lh::hands_b[IND_SUITS], wall_);
-      std::tie(all[i].b2, each[i].b2) = count_each(states::lh::hands_b[IND_SUITS], wall_, river_);
-      std::tie(all[i].c, each[i].c) = count_each(states::lh::hands_c[IND_SUITS], wall_, river_);
-      std::tie(all[i].d, each[i].d) = count_each(states::lh::hands_d[IND_SUITS], wall_, river_);
+      count_all(all[i].a, states::lh::hands_a[IND_SUITS], wall_);
+      count_all(all[i].b1, states::lh::hands_b[IND_SUITS], wall_);
+      count_each(all[i].b2, each[i].b2, states::lh::hands_b[IND_SUITS], wall_, river_);
+      count_each(all[i].c, each[i].c, states::lh::hands_c[IND_SUITS], wall_, river_);
+      count_each(all[i].d, each[i].d, states::lh::hands_d[IND_SUITS], wall_, river_);
     }
 
     {
       const Hand wall_(wall.cbegin() + 27, wall.cend());
       const uint16_t river_ = (river >> 27) & 0x7F;
 
-      all[3].a = count_all(states::lh::hands_a[IND_HONOR], wall_);
-      all[3].b1 = count_all(states::lh::hands_b[IND_HONOR], wall_);
-      std::tie(all[3].b2, each[3].b2) = count_each(states::lh::hands_b[IND_HONOR], wall_, river_);
-      std::tie(all[3].d, each[3].d) = count_each(states::lh::hands_d[IND_HONOR], wall_, river_);
+      count_all(all[3].a, states::lh::hands_a[IND_HONOR], wall_);
+      count_all(all[3].b1, states::lh::hands_b[IND_HONOR], wall_);
+      count_each(all[3].b2, each[3].b2, states::lh::hands_b[IND_HONOR], wall_, river_);
+      count_each(all[3].d, each[3].d, states::lh::hands_d[IND_HONOR], wall_, river_);
     }
 
     return internal::calc_lh(all, each, m);
@@ -186,23 +170,23 @@ namespace waits_predictor {
 
   Value calc_sp(const Hand& wall, const unsigned int river)
   {
-    std::vector<counter::sp::All> all(4u);
-    std::vector<counter::sp::Each> each(4u);
+    std::array<counter::sp::All, 4u> all{};
+    std::array<counter::sp::Each, 4u> each{};
 
     for (std::size_t i = 0u; i < 3u; ++i) {
       const Hand wall_(wall.cbegin() + 9 * i, wall.cbegin() + 9 * i + 9);
       const uint16_t river_ = (river >> (9 * i)) & 0x1FF;
 
-      all[i].a = count_all(states::sp::hands_a[IND_SUITS], wall_);
-      std::tie(all[i].b, each[i].b) = count_each(states::sp::hands_b[IND_SUITS], wall_, river_);
+      count_all(all[i].a, states::sp::hands_a[IND_SUITS], wall_);
+      count_each(all[i].b, each[i].b, states::sp::hands_b[IND_SUITS], wall_, river_);
     }
 
     {
       const Hand wall_(wall.cbegin() + 27, wall.cend());
       const uint16_t river_ = (river >> 27) & 0x7F;
 
-      all[3].a = count_all(states::sp::hands_a[IND_HONOR], wall_);
-      std::tie(all[3].b, each[3].b) = count_each(states::sp::hands_b[IND_HONOR], wall_, river_);
+      count_all(all[3].a, states::sp::hands_a[IND_HONOR], wall_);
+      count_each(all[3].b, each[3].b, states::sp::hands_b[IND_HONOR], wall_, river_);
     }
 
     return internal::calc_sp(all, each);
@@ -210,26 +194,26 @@ namespace waits_predictor {
 
   Value calc_lh_sp(const Hand& wall, const unsigned int river)
   {
-    std::vector<counter::lh::All> all(4u);
-    std::vector<counter::lh::Each> each(4u);
+    std::array<counter::lh::All, 4u> all{};
+    std::array<counter::lh::Each, 4u> each{};
 
     for (std::size_t i = 0u; i < 3u; ++i) {
       const Hand wall_(wall.cbegin() + 9 * i, wall.cbegin() + 9 * i + 9);
       const uint16_t river_ = (river >> (9 * i)) & 0x1FF;
 
-      all[i].a = count_all(states::lh_sp::hands_a[IND_SUITS], wall_);
-      all[i].b1 = count_all(states::lh_sp::hands_b[IND_SUITS], wall_);
-      std::tie(all[i].c, each[i].c) = count_each(states::lh_sp::hands_c[IND_SUITS], wall_, river_);
-      std::tie(all[i].d, each[i].d) = count_each(states::lh_sp::hands_d[IND_SUITS], wall_, river_);
+      count_all(all[i].a, states::lh_sp::hands_a[IND_SUITS], wall_);
+      count_all(all[i].b1, states::lh_sp::hands_b[IND_SUITS], wall_);
+      count_each(all[i].c, each[i].c, states::lh_sp::hands_c[IND_SUITS], wall_, river_);
+      count_each(all[i].d, each[i].d, states::lh_sp::hands_d[IND_SUITS], wall_, river_);
     }
 
     {
       const Hand wall_(wall.cbegin() + 27, wall.cend());
       const uint16_t river_ = (river >> 27) & 0x7F;
 
-      all[3].a = count_all(states::lh_sp::hands_a[IND_HONOR], wall_);
-      all[3].b1 = count_all(states::lh_sp::hands_b[IND_HONOR], wall_);
-      std::tie(all[3].d, each[3].d) = count_each(states::lh_sp::hands_d[IND_HONOR], wall_, river_);
+      count_all(all[3].a, states::lh_sp::hands_a[IND_HONOR], wall_);
+      count_all(all[3].b1, states::lh_sp::hands_b[IND_HONOR], wall_);
+      count_each(all[3].d, each[3].d, states::lh_sp::hands_d[IND_HONOR], wall_, river_);
     }
 
     return internal::calc_lh(all, each, 4);
@@ -286,15 +270,14 @@ namespace waits_predictor {
   }
 
   namespace internal {
-    Value calc_lh(const std::vector<counter::lh::All>& all, const std::vector<counter::lh::Each>& each, const int m)
+    Value calc_lh(const std::array<counter::lh::All, 4u>& all, const std::array<counter::lh::Each, 4u>& each, const int m)
     {
-      assert(all.size() == 4u);
-      assert(each.size() == 4u);
-
       Value ret;
 
+      // 全組合せを計算する
       ret.all = add2(sum(all, suits[3], m), all[3], m);
 
+      // 数牌を待ちとする組合せを計算する
       for (std::size_t i = 0u; i < 3u; ++i) {
         const auto tmp = sum(all, suits[i], m);
 
@@ -303,6 +286,7 @@ namespace waits_predictor {
         }
       }
 
+      // 字牌を待ちとする組合せを計算する
       {
         const auto tmp = sum(all, suits[3], m);
 
@@ -314,11 +298,8 @@ namespace waits_predictor {
       return ret;
     }
 
-    Value calc_sp(const std::vector<counter::sp::All>& all, const std::vector<counter::sp::Each>& each)
+    Value calc_sp(const std::array<counter::sp::All, 4u>& all, const std::array<counter::sp::Each, 4u>& each)
     {
-      assert(all.size() == 4u);
-      assert(each.size() == 4u);
-
       Value ret;
 
       ret.all = add2(sum(all, suits[3]), all[3]);
