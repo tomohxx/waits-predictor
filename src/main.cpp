@@ -5,7 +5,6 @@
 #include <iostream>
 #include <limits>
 #include <valarray>
-#include <vector>
 
 int main(int argc, char* argv[])
 {
@@ -26,8 +25,8 @@ int main(int argc, char* argv[])
   waits_predictor::initialize(STATES_FILE_PATH);
 
   int m;
-  std::vector<int> wall(NUM_TIDS, 4);
-  std::vector<int> river(NUM_TIDS, 0);
+  std::array<int, NUM_TIDS> wall{};
+  std::array<int, NUM_TIDS> river{};
 
   fin >> m;
 

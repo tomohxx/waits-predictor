@@ -36,10 +36,10 @@ namespace waits_predictor {
   Value calc_lh(const Hand& wall, unsigned int river, int m);
   Value calc_sp(const Hand& wall, unsigned int river);
   Value calc_lh_sp(const Hand& wall, unsigned int river);
-  Value calc_to(const std::vector<int>& wall, const std::vector<int>& river);
+  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::array<int, NUM_TIDS>& river);
 
-  std::array<Value, 4u> predict_waits(const std::vector<int>& wall,
-                                      const std::vector<int>& river,
+  std::array<Value, 4u> predict_waits(const std::array<int, NUM_TIDS>& wall,
+                                      const std::array<int, NUM_TIDS>& river,
                                       const int m,
                                       const bool check)
   {
@@ -230,7 +230,7 @@ namespace waits_predictor {
     return internal::calc_lh(all, each, 4);
   }
 
-  Value calc_to(const std::vector<int>& wall, const std::vector<int>& river)
+  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::array<int, NUM_TIDS>& river)
   {
     using internal::tile_ids;
 
