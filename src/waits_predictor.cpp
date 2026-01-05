@@ -33,13 +33,13 @@ namespace waits_predictor {
     Value calc_sp(const std::array<counter::sp::All, 4u>& all, const std::array<counter::sp::Each, 4u>& each);
   }
 
-  Value calc_lh(const Hand& wall, unsigned int river, int m);
-  Value calc_sp(const Hand& wall, unsigned int river);
-  Value calc_lh_sp(const Hand& wall, unsigned int river);
-  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::array<int, NUM_TIDS>& river);
+  Value calc_lh(const Hand& wall, uint64_t river, int m);
+  Value calc_sp(const Hand& wall, uint64_t river);
+  Value calc_lh_sp(const Hand& wall, uint64_t river);
+  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::bitset<NUM_TIDS>& river);
 
   std::array<Value, 4u> predict_waits(const std::array<int, NUM_TIDS>& wall,
-                                      const std::array<int, NUM_TIDS>& river,
+                                      const std::bitset<NUM_TIDS>& river,
                                       const int m,
                                       const bool check)
   {
@@ -58,22 +58,13 @@ namespace waits_predictor {
         }
       }
 
-      for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
-        if (river[i] < 0 || river[i] > 4) {
-          throw std::invalid_argument(std::format("Invalid number of river's tiles at {}: {}", i, river[i]));
-        }
-      }
-
       if (m < 0 || m > 4) {
         throw std::invalid_argument(std::format("Invalid sum of hands's melds: {}", m));
       }
     }
 
     const Hand wall_(wall.begin(), wall.end());
-    const unsigned int river_ = std::accumulate(river.crbegin(),
-                                                river.crend(),
-                                                0u,
-                                                [](int acc, const int& x) { return (acc << 1) | !!x; });
+    const uint64_t river_ = river.to_ullong();
 
     // 一般形の組合せ
     const auto ret_lh = calc_lh(wall_, river_, m);
@@ -88,6 +79,20 @@ namespace waits_predictor {
     ret_sp -= ret_lh_sp;
 
     return {ret_lh + ret_sp + ret_to, ret_lh, ret_sp, ret_to};
+  }
+
+  std::array<Value, 4u> predict_waits(const std::array<int, 34u>& wall,
+                                      const std::array<int, 34u>& river,
+                                      int m,
+                                      bool check)
+  {
+    std::bitset<NUM_TIDS> tmp;
+
+    for (unsigned int i = 0u; i < NUM_TIDS; ++i) {
+      if (river[i]) tmp.set(i);
+    }
+
+    return predict_waits(wall, tmp, m, check);
   }
 
   unsigned int count_combin(const Hand& wall, const Hand& hand)
@@ -150,7 +155,7 @@ namespace waits_predictor {
     }
   }
 
-  Value calc_lh(const Hand& wall, const unsigned int river, const int m)
+  Value calc_lh(const Hand& wall, const uint64_t river, const int m)
   {
     std::array<counter::lh::All, 4u> all{};
     std::array<counter::lh::Each, 4u> each{};
@@ -179,7 +184,7 @@ namespace waits_predictor {
     return internal::calc_lh(all, each, m);
   }
 
-  Value calc_sp(const Hand& wall, const unsigned int river)
+  Value calc_sp(const Hand& wall, const uint64_t river)
   {
     std::array<counter::sp::All, 4u> all{};
     std::array<counter::sp::Each, 4u> each{};
@@ -203,7 +208,7 @@ namespace waits_predictor {
     return internal::calc_sp(all, each);
   }
 
-  Value calc_lh_sp(const Hand& wall, const unsigned int river)
+  Value calc_lh_sp(const Hand& wall, const uint64_t river)
   {
     std::array<counter::lh::All, 4u> all{};
     std::array<counter::lh::Each, 4u> each{};
@@ -230,7 +235,7 @@ namespace waits_predictor {
     return internal::calc_lh(all, each, 4);
   }
 
-  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::array<int, NUM_TIDS>& river)
+  Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::bitset<NUM_TIDS>& river)
   {
     using internal::tile_ids;
 
