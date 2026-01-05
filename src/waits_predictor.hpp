@@ -8,8 +8,8 @@
 namespace waits_predictor {
   using states::initialize;
 
-  std::array<Value, 4u> predict_waits(const std::vector<int>& wall,
-                                      const std::vector<int>& river,
+  std::array<Value, 4u> predict_waits(const std::array<int, 34u>& wall,
+                                      const std::array<int, 34u>& river,
                                       int m,
                                       bool check = false);
 }

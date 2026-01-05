@@ -5,6 +5,7 @@ project(waits-predictor)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -Wextra -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra")
+set(CMAKE_INSTALL_DATADIR share/data)
 
 add_library(waits_predictor STATIC
   src/counter.cpp
