@@ -14,6 +14,9 @@ target_compile_options(waits_predictor PUBLIC
 target_include_directories(waits_predictor PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include>)
+target_compile_definitions(waits_predictor INTERFACE
+  $<BUILD_INTERFACE:STATES_FILE_PATH="${PROJECT_BINARY_DIR}">
+  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_PREFIX}/share/data">)
 set(PUBLIC_HEADERS
   src/states.hpp
   src/value.hpp
@@ -45,5 +48,4 @@ install(EXPORT WaitsPredictor FILE WaitsPredictorConfig.cmake DESTINATION share/
 add_executable(mkind src/mkind.cpp src/utils.cpp)
 
 add_executable(main src/main.cpp)
-target_compile_definitions(main PUBLIC STATES_FILE_PATH="${PROJECT_BINARY_DIR}")
 target_link_libraries(main waits_predictor)
