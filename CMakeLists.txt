@@ -1,17 +1,19 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
 project(waits-predictor)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -Wextra -g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra")
-set(CMAKE_INSTALL_DATADIR share/data)
 
 add_library(waits_predictor STATIC
   src/counter.cpp
   src/states.cpp
   src/value.cpp
   src/waits_predictor.cpp)
+target_compile_features(waits_predictor PUBLIC cxx_std_23)
+target_compile_options(waits_predictor PUBLIC
+  $<$<CONFIG:Debug>:-O0 -Wall -Wextra -g>
+  $<$<CONFIG:Release>:-O3 -Wall -Wextra>)
+target_include_directories(waits_predictor PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:include>)
 set(PUBLIC_HEADERS
   src/states.hpp
   src/value.hpp
@@ -37,7 +39,7 @@ install(FILES
   ${PROJECT_BINARY_DIR}/sp_h_b.bin
   ${PROJECT_BINARY_DIR}/sp_s_a.bin
   ${PROJECT_BINARY_DIR}/sp_s_b.bin
-TYPE DATA)
+  DESTINATION share/data)
 install(EXPORT WaitsPredictor FILE WaitsPredictorConfig.cmake DESTINATION share/cmake)
 
 add_executable(mkind src/mkind.cpp src/utils.cpp)
