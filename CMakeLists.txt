@@ -12,17 +12,13 @@ target_compile_options(waits_predictor PUBLIC
   $<$<CONFIG:Debug>:-O0 -Wall -Wextra -g>
   $<$<CONFIG:Release>:-O3 -Wall -Wextra>)
 target_include_directories(waits_predictor PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_compile_definitions(waits_predictor INTERFACE
   $<BUILD_INTERFACE:STATES_FILE_PATH="${PROJECT_BINARY_DIR}">
-  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_PREFIX}/share/data">)
-set(PUBLIC_HEADERS
-  src/states.hpp
-  src/value.hpp
-  src/waits_predictor.hpp)
-set_target_properties(waits_predictor PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
+  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_PREFIX}/share/data/mahjong">)
 install(TARGETS waits_predictor EXPORT WaitsPredictor)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/mahjong DESTINATION include)
 install(FILES
   ${PROJECT_BINARY_DIR}/lh_h_a.bin
   ${PROJECT_BINARY_DIR}/lh_h_b.bin
@@ -42,10 +38,15 @@ install(FILES
   ${PROJECT_BINARY_DIR}/sp_h_b.bin
   ${PROJECT_BINARY_DIR}/sp_s_a.bin
   ${PROJECT_BINARY_DIR}/sp_s_b.bin
-  DESTINATION share/data)
-install(EXPORT WaitsPredictor FILE WaitsPredictorConfig.cmake DESTINATION share/cmake)
+  DESTINATION share/data/mahjong)
+install(EXPORT WaitsPredictor
+  FILE WaitsPredictorConfig.cmake
+  NAMESPACE Mahjong::
+  DESTINATION share/cmake/mahjong)
 
 add_executable(mkind src/mkind.cpp src/utils.cpp)
+target_include_directories(mkind PRIVATE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-add_executable(main src/main.cpp)
-target_link_libraries(main waits_predictor)
+add_executable(example example/example.cpp)
+target_link_libraries(example waits_predictor)

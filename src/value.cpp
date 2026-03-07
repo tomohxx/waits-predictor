@@ -1,6 +1,6 @@
-#include "value.hpp"
+#include <mahjong/waits_predictor/value.hpp>
 
-namespace waits_predictor {
+namespace mahjong::waits_predictor {
   Value& Value::operator+=(const Value& rhs)
   {
     this->all += rhs.all;

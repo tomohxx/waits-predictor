@@ -2,7 +2,7 @@
 #include <array>
 #include <cassert>
 
-namespace waits_predictor::counter {
+namespace mahjong::waits_predictor::counter {
   namespace lh {
     void add1(All& lhs, const All& rhs, const int m)
     {

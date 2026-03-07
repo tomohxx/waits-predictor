@@ -1,12 +1,12 @@
-#include "states.hpp"
 #include <filesystem>
 #include <format>
 #include <fstream>
 #include <iostream>
+#include <mahjong/waits_predictor/states.hpp>
 #include <stdexcept>
 using std::filesystem::path;
 
-namespace waits_predictor::states {
+namespace mahjong::waits_predictor::states {
   template <std::size_t N>
   void read_file(const std::filesystem::path& file,
                  const std::array<unsigned int, N>& num_hands,

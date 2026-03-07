@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 
-namespace waits_predictor::counter {
+namespace mahjong::waits_predictor::counter {
   namespace lh {
     struct All {
       std::array<uint64_t, 5u> a{};  // A状態の数

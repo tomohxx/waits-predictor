@@ -11,11 +11,11 @@ $ cmake .. -DCMAKE_BUILD_TYPE=Release
 $ make
 ```
 
-## Sample Program
+## Example
 
 ```
 $ cd build
-$ ./main ../resources/wall_river.txt
+$ ./example ../resources/wall_river.txt
 Total   39270395383132
 Wait    NormalHand      SevenPairs      ThirteenOrphans Proportion
 0       1078779323540   206489564928    369098752       0.032738

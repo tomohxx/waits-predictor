@@ -1,10 +1,10 @@
-#ifndef VALUE_HPP
-#define VALUE_HPP
+#ifndef MAHJONG_WAITS_PREDICTOR_VALUE_HPP
+#define MAHJONG_WAITS_PREDICTOR_VALUE_HPP
 
 #include <cstdint>
 #include <valarray>
 
-namespace waits_predictor {
+namespace mahjong::waits_predictor {
   constexpr unsigned int NUM_TIDS = 34u;
 
   struct Value {

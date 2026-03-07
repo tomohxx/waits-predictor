@@ -1,11 +1,11 @@
-#include "states.hpp"
 #include "utils.hpp"
 #include <cassert>
 #include <fstream>
 #include <functional>
+#include <mahjong/waits_predictor/states.hpp>
 #include <vector>
-using namespace waits_predictor;
-using namespace waits_predictor::states;
+using namespace mahjong::waits_predictor;
+using namespace mahjong::waits_predictor::states;
 using Hand = std::vector<uint8_t>;
 using Hands = std::vector<Hand>;
 

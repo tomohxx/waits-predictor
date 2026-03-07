@@ -1,5 +1,5 @@
-#ifndef STATES_HPP
-#define STATES_HPP
+#ifndef MAHJONG_WAITS_PREDICTOR_STATES_HPP
+#define MAHJONG_WAITS_PREDICTOR_STATES_HPP
 
 #include <array>
 #include <cstdint>
@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-namespace waits_predictor {
+namespace mahjong::waits_predictor {
   constexpr unsigned int IND_SUITS = 0u;
   constexpr unsigned int IND_HONOR = 1u;
   constexpr unsigned int LEN_SUITS = 9u;

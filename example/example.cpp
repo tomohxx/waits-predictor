@@ -1,14 +1,14 @@
-#include "waits_predictor.hpp"
 #include <chrono>
 #include <format>
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <mahjong/waits_predictor.hpp>
 #include <valarray>
 
 int main(int argc, char* argv[])
 {
-  using waits_predictor::NUM_TIDS;
+  using mahjong::waits_predictor::NUM_TIDS;
 
   if (argc != 2) {
     std::cerr << std::format("Usage: {} [input file]\n", argv[0]);
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  waits_predictor::initialize(STATES_FILE_PATH);
+  mahjong::waits_predictor::initialize(STATES_FILE_PATH);
 
   int m;
   std::array<int, NUM_TIDS> wall{};
@@ -35,12 +35,12 @@ int main(int argc, char* argv[])
     fin >> wall[i] >> river[i];
   }
 
-  std::array<waits_predictor::Value, 4u> values;
+  std::array<mahjong::waits_predictor::Value, 4u> values;
 
   const auto start = std::chrono::system_clock::now();
 
   try {
-    values = waits_predictor::predict_waits(wall, river, m, true);
+    values = mahjong::waits_predictor::predict_waits(wall, river, m, true);
   }
   catch (std::runtime_error& e) {
     std::cerr << e.what() << std::endl;

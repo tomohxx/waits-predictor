@@ -1,8 +1,8 @@
-#include "waits_predictor.hpp"
 #include "counter.hpp"
 #include <array>
 #include <cassert>
 #include <format>
+#include <mahjong/waits_predictor.hpp>
 #include <numeric>
 #include <stdexcept>
 
@@ -17,7 +17,7 @@ namespace {
   }};
 }
 
-namespace waits_predictor {
+namespace mahjong::waits_predictor {
   namespace internal {
     // 幺九牌
     constexpr std::array<int, 13u> tile_ids = {0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33};
