@@ -18,7 +18,7 @@ namespace {
 }
 
 namespace mahjong::waits_predictor {
-  namespace internal {
+  namespace detail {
     // 幺九牌
     constexpr std::array<int, 13u> tile_ids = {0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33};
     // 組合せを計算するスーツインデックスの配列
@@ -181,7 +181,7 @@ namespace mahjong::waits_predictor {
       count_each(all[3].d, each[3].d, states::lh::hands_d[IND_HONOR], wall_, river_);
     }
 
-    return internal::calc_lh(all, each, m);
+    return detail::calc_lh(all, each, m);
   }
 
   Value calc_sp(const Hand& wall, const uint64_t river)
@@ -205,7 +205,7 @@ namespace mahjong::waits_predictor {
       count_each(all[3].b, each[3].b, states::sp::hands_b[IND_HONOR], wall_, river_);
     }
 
-    return internal::calc_sp(all, each);
+    return detail::calc_sp(all, each);
   }
 
   Value calc_lh_sp(const Hand& wall, const uint64_t river)
@@ -232,12 +232,12 @@ namespace mahjong::waits_predictor {
       count_each(all[3].d, each[3].d, states::lh_sp::hands_d[IND_HONOR], wall_, river_);
     }
 
-    return internal::calc_lh(all, each, 4);
+    return detail::calc_lh(all, each, 4);
   }
 
   Value calc_to(const std::array<int, NUM_TIDS>& wall, const std::bitset<NUM_TIDS>& river)
   {
-    using internal::tile_ids;
+    using detail::tile_ids;
 
     Value ret;
 
@@ -285,7 +285,7 @@ namespace mahjong::waits_predictor {
     return ret;
   }
 
-  namespace internal {
+  namespace detail {
     Value calc_lh(const std::array<counter::lh::All, 4u>& all, const std::array<counter::lh::Each, 4u>& each, const int m)
     {
       Value ret;
