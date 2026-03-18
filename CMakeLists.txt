@@ -19,7 +19,7 @@ target_compile_definitions(waits_predictor INTERFACE
   $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_PREFIX}/share/data/mahjong">)
 install(TARGETS waits_predictor EXPORT WaitsPredictor)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/mahjong DESTINATION include)
-install(FILES
+set(STATES_FILES
   ${PROJECT_BINARY_DIR}/lh_h_a.bin
   ${PROJECT_BINARY_DIR}/lh_h_b.bin
   ${PROJECT_BINARY_DIR}/lh_h_d.bin
@@ -37,8 +37,8 @@ install(FILES
   ${PROJECT_BINARY_DIR}/sp_h_a.bin
   ${PROJECT_BINARY_DIR}/sp_h_b.bin
   ${PROJECT_BINARY_DIR}/sp_s_a.bin
-  ${PROJECT_BINARY_DIR}/sp_s_b.bin
-  DESTINATION share/data/mahjong)
+  ${PROJECT_BINARY_DIR}/sp_s_b.bin)
+install(FILES ${STATES_FILES} DESTINATION share/data/mahjong)
 install(EXPORT WaitsPredictor
   FILE WaitsPredictorConfig.cmake
   NAMESPACE Mahjong::
@@ -50,3 +50,12 @@ target_include_directories(mkind PRIVATE
 
 add_executable(example example/example.cpp)
 target_link_libraries(example waits_predictor)
+
+add_custom_command(OUTPUT ${STATES_FILES}
+  COMMAND $<TARGET_FILE:mkind>
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  DEPENDS mkind
+  COMMENT "Generating states files"
+  VERBATIM)
+add_custom_target(states_files ALL DEPENDS ${STATES_FILES})
+add_custom_target(exclude_states_files DEPENDS waits_predictor mkind example)
