@@ -18,7 +18,7 @@ target_include_directories(waits_predictor PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_definitions(waits_predictor INTERFACE
   $<BUILD_INTERFACE:STATES_FILE_PATH="${PROJECT_BINARY_DIR}">
-  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_DATADIR}/mahjong">)
+  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_FULL_DATADIR}/mahjong">)
 install(TARGETS waits_predictor EXPORT WaitsPredictor)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/mahjong DESTINATION include)
 set(STATES_FILES
