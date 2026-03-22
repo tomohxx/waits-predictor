@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(waits-predictor)
+project(waits-predictor LANGUAGES CXX)
+
+include(GNUInstallDirs)
 
 add_library(waits_predictor STATIC
   src/counter.cpp
@@ -16,7 +18,7 @@ target_include_directories(waits_predictor PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_definitions(waits_predictor INTERFACE
   $<BUILD_INTERFACE:STATES_FILE_PATH="${PROJECT_BINARY_DIR}">
-  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_PREFIX}/share/data/mahjong">)
+  $<INSTALL_INTERFACE:STATES_FILE_PATH="${CMAKE_INSTALL_DATADIR}/mahjong">)
 install(TARGETS waits_predictor EXPORT WaitsPredictor)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/mahjong DESTINATION include)
 set(STATES_FILES
@@ -38,11 +40,11 @@ set(STATES_FILES
   ${PROJECT_BINARY_DIR}/sp_h_b.bin
   ${PROJECT_BINARY_DIR}/sp_s_a.bin
   ${PROJECT_BINARY_DIR}/sp_s_b.bin)
-install(FILES ${STATES_FILES} DESTINATION share/data/mahjong)
+install(FILES ${STATES_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/mahjong)
 install(EXPORT WaitsPredictor
   FILE WaitsPredictorConfig.cmake
-  NAMESPACE Mahjong::
-  DESTINATION share/cmake/mahjong)
+  NAMESPACE WaitsPredictor::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mahjong)
 
 add_executable(mkind src/mkind.cpp src/utils.cpp)
 target_include_directories(mkind PRIVATE
